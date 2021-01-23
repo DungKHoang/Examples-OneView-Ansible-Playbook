@@ -1,0 +1,45 @@
+---
+- name:                                    Configure server profiles or templates
+  hosts:                                   localhost
+  vars:                                    
+     config:                               'oneview_config.json'
+  tasks:                                   
+
+
+
+# ---------- Server Profile EPIC5-controller1
+
+
+   - name:                                  Power off server F1-CN75140CR5, bay 11
+     oneview_server_hardware:              
+        config:                            '{{config}}'
+        state:                             power_state_set
+        data:                              
+           name:                           'F1-CN75140CR5, bay 11'
+           powerStateData:                 
+              powerState:                  'Off'
+              powerControl:                'MomentaryPress'
+
+
+   - name:                                  Create server profile  from template  Dung-Test-Capture-VMware
+     oneview_server_profile:               
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+           name:                           EPIC5-controller1
+           type:                           ServerProfileV11
+           description:                    Blue Data EPIC 5
+           serverProfileTemplateName:      Sample-SPT
+           serverHardwareName:             F1-CN75140CR5, bay 11
+
+
+   - name:                                  Power on server F1-CN75140CR5, bay 11
+     oneview_server_hardware:              
+        config:                            '{{config}}'
+        state:                             power_state_set
+        data:                              
+           name:                           'F1-CN75140CR5, bay 11'
+           powerStateData:                 
+              powerState:                  'On'
+              powerControl:                'MomentaryPress'
+

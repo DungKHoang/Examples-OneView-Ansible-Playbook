@@ -1,0 +1,177 @@
+---
+- name:                                    Configure server profiles or templates
+  hosts:                                   localhost
+  vars:                                    
+     config:                               'oneview_config.json'
+  tasks:                                   
+
+
+
+# ---------- Server Profile Template Sample-SPT
+
+
+   - name:                                  Create server profile template  Sample-SPT
+     oneview_server_profile_template:      
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+           name:                           Sample-SPT
+           type:                           ServerProfileTemplateV7
+           description:                    AZUR Template
+           serverProfileDescription:       AZUR Template
+           serverHardwareTypeName:         SY 480 Gen10 1
+           enclosureGroupName:             EG 3 frames
+           affinity:                       Bay
+           bootMode:                       
+              manageMode:                  True
+              mode:                        BIOS
+              complianceControl:           Checked
+           boot:                           
+              manageBoot:                  True
+              complianceControl:           Checked
+              order:                       [
+                 CD ,                     
+                 USB ,                    
+                 HardDisk ,               
+                 PXE 
+                                           ]
+           bios:                           
+              manageBios:                  True
+              complianceControl:           UnChecked
+              overriddenSettings:          [
+                 {                        
+                    id:                    "Sriov",
+                    value:                 "Enabled"
+                 },                       
+                 {                        
+                    id:                    "IntelProcVtd",
+                    value:                 "Enabled"
+                 },                       
+                 {                        
+                    id:                    "ProcVirtualization",
+                    value:                 "Enabled"
+                 }
+                                           ]
+           connectionSettings:             
+              manageConnections:           True
+              complianceControl:           UnChecked
+              connections:                 
+              - id:                        1
+                portId:                    Mezz 3:1-a
+                name:                      conn 1
+                functionType:              Ethernet
+                networkName:               Management
+                requestedMbps:             2500
+                requestedVFs:              0
+              - id:                        2
+                portId:                    Mezz 3:1-b
+                name:                      Conn 2
+                functionType:              Ethernet
+                networkName:               Corporate 16
+                requestedMbps:             2500
+                requestedVFs:              Auto
+              - id:                        3
+                portId:                    Mezz 3:2-a
+                name:                      Conn 3
+                functionType:              Ethernet
+                networkName:               Mgmt
+                requestedMbps:             2500
+                requestedVFs:              3
+           managementProcessor:            
+              manageMp:                    True
+              complianceControl:           Checked
+              mpSettings:                  
+                 - {                      
+                       settingType : AdministratorAccount,                                          
+                       args        : {    
+                          deleteAdministratorAccount : False,                                          
+                          password:                   '***REDACTED***'                                          
+                                     }    
+                   }                      
+                 - {                      
+                       settingType : Hostname,                                           
+                       args        : {    
+                          hostName: '{serverProfileName}-ilo'                                          
+                                     }    
+                   }                      
+                 - {                      
+                       settingType : LocalAccounts,                                           
+                       args        : {    
+                          localAccounts : [                                          
+                             {            
+                                   userName                 : user1,                                          
+                                   displayName              : user1-display,                                          
+                                   password                 : '***REDACTED***',                                          
+                                          
+                                          
+                                          
+
+                             },           
+                             {            
+                                   userName                 : user2,                                          
+                                   displayName              : user2-display,                                          
+                                   password                 : '***REDACTED***',                                          
+                                          
+
+                             }
+                                          ]                                          
+                                      }   
+                   }                      
+                 - {                      
+                       settingType : DirectoryGroups ,                                           
+                       args        : {    
+                          directoryGroupAccounts :   [                                          
+                             {            
+                                   groupDN                  : 'ou=DG1, dc=domain, dc=com' ,                                          
+                                   groupSID                 : 1234567890C ,                                            
+                                          
+                                          
+                                          
+                                          
+
+                             },           
+                             {            
+                                   groupDN                  : 'ou=DG2, dc=domain, dc=com' ,                                          
+                                   groupSID                 : 1234567890A ,                                            
+
+                             },           
+                             {            
+                                   groupDN                  : 'ou=DG3, dc=domain, dc=com' ,                                          
+                                   groupSID                 : 1234567890B ,                                            
+
+                             }
+                                                     ]                                          
+                                     }    
+                   }                      
+                 - {                      
+                       settingType : KeyManager,                                           
+                       args        : {    
+                          primaryServerAddress:   192.168.1.51 ,                                          
+                          primaryServerPort:      9000 ,                                          
+                          groupName:              EKMS2 ,                                          
+                          certificateName:        name_of_CA ,                                          
+                          loginName:              administrator ,                                          
+                          password:               '***REDACTED***'                                          
+                                     }    
+                   }                      
+                 - {                      
+                       settingType : Directory,                                           
+                       args        : {    
+                          directoryAuthentication:    defaultSchema  ,                                          
+                          directoryGenericLDAP:       False  ,                                          
+                          iloObjectDistinguishedName: 'dn=lomobject, ou=OU1, dc=domain, dc=com',                                          
+                          password:                   '***REDACTED***',                                          
+                          directoryServerAddress:     192.168.1.51  ,                                          
+                          directoryServerPort:        636  ,                                          
+                          directoryUserContext: [                                          
+                             'ou=OU1, dc=domain, dc=com',                                           
+                             'ou=OU2, dc=domain, dc=com'
+                                                ]                                          
+                                     }    
+                   }                      
+           macType:                        Virtual
+           wwnType:                        Virtual
+           serialNumberType:               Physical
+           iscsiInitiatorNameType:         AutoGenerated
+           hideUnusedFlexNics:             True
+

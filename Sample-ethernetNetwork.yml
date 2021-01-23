@@ -1,0 +1,25 @@
+---
+- name:                                    Configure Ethernet networks
+  hosts:                                   localhost
+  vars:                                    
+     config:                               'oneview_config.json'
+  tasks:                                   
+
+
+
+# ---------- Ethernet network  prod
+   - name:                                 Create ethernet network prod
+     oneview_ethernet_network:             
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+           type:                           'ethernet-networkV4'
+           name:                           prod
+           ethernetNetworkType:            Tagged
+           purpose:                        General
+           smartLink:                      False
+           PrivateNetwork:                 False
+           vlanId:                         2300
+           bandwidth:                      
+                 typicalBandwidth:         1000
+                 maximumBandwidth:         1000
