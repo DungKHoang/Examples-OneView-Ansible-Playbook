@@ -13,4 +13,4 @@ The repository contains a collection of Ansible playbooks for HPE OneView config
    *  Sample-uplinkset.yml 
         - query interconnect type to get port name
         - query URI of network and network sets
-        - create uplink set with uplink ports, nativeNterok and networks
+        - create uplink set with uplink ports, nativeNetwork and networks
