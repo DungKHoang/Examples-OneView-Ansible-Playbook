@@ -1,0 +1,167 @@
+---
+- name:                                    Configure logical Interconnect Group
+  hosts:                                   localhost
+  vars:                                    
+     config:                               'oneview_config.json'
+  tasks:                                   
+
+   - name:                                  Create logical InterConnect Group LIG-VC3
+     oneview_logical_interconnect_group:   
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+           name:                           LIG-VC3
+           enclosureType:                  SY12000
+           interconnectBaySet:             3
+           redundancyType:                 HighlyAvailable
+           enclosureIndexes:               
+              - 1                         
+              - 2                         
+              - 3                         
+           ethernetSettings:               
+              type:                        EthernetInterconnectSettingsV6
+              enableIgmpSnooping:          
+              enableNetworkLoopProtection: True
+              enablePauseFloodProtection:  True
+              enableRichTLV:               False
+              enableFastMacCacheFailover:  True
+              enableStormControl:          False
+              stormControlPollingInterval: 10
+              stormControlThreshold:       0
+              enableTaggedLldp:            False
+              lldpIpAddressMode:           IPV4
+              consistencyChecking:         ExactMatch
+           consistencyCheckingForInternalNetworks: ExactMatch                                          
+           internalNetworkNames:           
+              - NCS ESX FT 123            
+              - iSCSI VSA                 
+              - NHITSTenant11             
+              - NHITSMGMT3                
+              - NHITSTenant52             
+              - NHITSTenant21             
+              - NHITSESXFT1               
+              - NHITSTenant53             
+              - NCS ESX VMOTION 122       
+              - vMotion                   
+              - NHITSEXT3                 
+              - NHITSESXVMotion1          
+              - NHITSMGMT2                
+              - NHITSTenant31             
+              - VMware Autodeploy         
+              - NHITSMS1                  
+              - NHITSESXVMotion2          
+              - NCS ESX VSAN 121          
+              - NHITSEXT1                 
+              - NHITSESXFT2               
+              - NHITSTenant41             
+              - NHITSMGMT1                
+              - NHITSTenant43             
+              - NHITSTenant13             
+              - NHITSTenant32             
+              - NHITSESXFT3               
+              - NHITSTenant23             
+              - NHITSTenant33             
+              - NHITSMS3                  
+              - NHITSEXT2                 
+              - NHITSTenant42             
+              - NHITSTenant51             
+              - NHITSESXVMotion3          
+              - NHITSTenant22             
+              - NHITSTenant12             
+              - NHITSMS2                  
+           interconnectMapTemplate:        
+              interconnectMapEntryTemplates:                                          
+                 - permittedInterconnectTypeName: Virtual Connect SE 40Gb F8 Module for Synergy                                          
+                   enclosureIndex:         1
+                   logicalLocation:        
+                      locationEntries:     
+                       - type:             Bay
+                         relativeValue:    3
+                       - type:             Enclosure
+                         relativeValue:    1
+                 - permittedInterconnectTypeName: Synergy 20Gb Interconnect Link Module                                          
+                   enclosureIndex:         1
+                   logicalLocation:        
+                      locationEntries:     
+                       - type:             Bay
+                         relativeValue:    6
+                       - type:             Enclosure
+                         relativeValue:    1
+                 - permittedInterconnectTypeName: Synergy 20Gb Interconnect Link Module                                          
+                   enclosureIndex:         2
+                   logicalLocation:        
+                      locationEntries:     
+                       - type:             Bay
+                         relativeValue:    3
+                       - type:             Enclosure
+                         relativeValue:    2
+                 - permittedInterconnectTypeName: Virtual Connect SE 40Gb F8 Module for Synergy                                          
+                   enclosureIndex:         2
+                   logicalLocation:        
+                      locationEntries:     
+                       - type:             Bay
+                         relativeValue:    6
+                       - type:             Enclosure
+                         relativeValue:    2
+                 - permittedInterconnectTypeName: Synergy 20Gb Interconnect Link Module                                          
+                   enclosureIndex:         3
+                   logicalLocation:        
+                      locationEntries:     
+                       - type:             Bay
+                         relativeValue:    3
+                       - type:             Enclosure
+                         relativeValue:    3
+                 - permittedInterconnectTypeName: Synergy 20Gb Interconnect Link Module                                          
+                   enclosureIndex:         3
+                   logicalLocation:        
+                      locationEntries:     
+                       - type:             Bay
+                         relativeValue:    6
+                       - type:             Enclosure
+                         relativeValue:    3
+
+
+   - name:                                  Create logical InterConnect Group LIG-FC2-5
+     oneview_logical_interconnect_group:   
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+           name:                           LIG-FC2-5
+           enclosureType:                  SY12000
+           interconnectBaySet:             2
+           redundancyType:                 Redundant
+           enclosureIndexes:               
+              - -1                        
+           ethernetSettings:               
+              type:                        EthernetInterconnectSettingsV6
+              enableIgmpSnooping:          
+              enableNetworkLoopProtection: True
+              enablePauseFloodProtection:  True
+              enableRichTLV:               False
+              enableFastMacCacheFailover:  True
+              enableStormControl:          False
+              stormControlPollingInterval: 10
+              stormControlThreshold:       0
+              enableTaggedLldp:            False
+              lldpIpAddressMode:           IPV4
+              consistencyChecking:         ExactMatch
+           interconnectMapTemplate:        
+              interconnectMapEntryTemplates:                                          
+                 - permittedInterconnectTypeName: Virtual Connect SE 16Gb FC Module for Synergy                                          
+                   enclosureIndex:         -1
+                   logicalLocation:        
+                      locationEntries:     
+                       - type:             Bay
+                         relativeValue:    2
+                       - type:             Enclosure
+                         relativeValue:    -1
+                 - permittedInterconnectTypeName: Virtual Connect SE 16Gb FC Module for Synergy                                          
+                   enclosureIndex:         -1
+                   logicalLocation:        
+                      locationEntries:     
+                       - type:             Bay
+                         relativeValue:    5
+                       - type:             Enclosure
+                         relativeValue:    -1
+
+

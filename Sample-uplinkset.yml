@@ -1,0 +1,152 @@
+---
+- name:                                    Configure uplink set
+  hosts:                                   localhost
+  vars:                                    
+     config:                               'oneview_config.json'
+  tasks:                                   
+
+
+
+# ---------- Uplink set Corporate for LIG LIG-VC3
+
+
+   - name:                                  Query OneView to get interconnect types and port number from lig LIG-VC3 and port name Q1 
+     oneview_interconnect_type_facts:      
+        config:                            '{{config}}'
+   - set_fact:                             
+        list_portInfos:                    '{{item.portInfos}}'
+     loop:                                 '{{interconnect_types}}'
+     when:                                 item.name =='Virtual Connect SE 40Gb F8 Module for Synergy'
+   - set_fact:                             
+        var_SEVC40f8_Q1:                   '{{item.portNumber}}'
+     loop:                                 '{{list_portInfos}}'
+     when:                                 item.portName =='Q1'
+
+
+   - name:                                  get URI for network  
+     oneview_ethernet_network_facts:       
+        config:                            '{{config}}'
+        name:                              
+   - set_fact:                             
+        var_Corporate_16:                  '{{ethernet_networks[0].uri}}'
+
+
+   - name:                                  Create uplink set Corporate for LIG LIG-VC3
+     oneview_logical_interconnect_group:   
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+           name:                           LIG-VC3
+           uplinkSets:                     
+            - name:                        Corporate
+              networkNames:                
+                 - Corporate 200           
+              logicalPortConfigInfos:      
+                  - desiredSpeed:          Auto
+                    logicalLocation:       
+                       locationEntries:    
+                        - type:            Enclosure
+                          relativeValue:   1
+                        - type:            Bay
+                          relativeValue:   3
+                        - type:            Port
+                          relativeValue:   '{{var_SEVC40f8_Q1}}'
+                  - desiredSpeed:          Auto
+                    logicalLocation:       
+                       locationEntries:    
+                        - type:            Enclosure
+                          relativeValue:   2
+                        - type:            Bay
+                          relativeValue:   6
+                        - type:            Port
+                          relativeValue:   '{{var_SEVC40f8_Q1}}'
+              networkType:                 Ethernet
+              mode:                        Auto
+              lacpTimer:                   Short
+              loadBalancingMode:           SourceAndDestinationMac
+              consistencyChecking:         ExactMatch
+              nativeNetworkUri:            '{{var_Corporate_16}}'
+
+
+# ---------- Uplink set FC-A for LIG LIG-VC3
+
+
+   - name:                                  Query OneView to get interconnect types and port number from lig LIG-VC3 and port name Q5.1 
+     oneview_interconnect_type_facts:      
+        config:                            '{{config}}'
+   - set_fact:                             
+        list_portInfos:                    '{{item.portInfos}}'
+     loop:                                 '{{interconnect_types}}'
+     when:                                 item.name =='Virtual Connect SE 40Gb F8 Module for Synergy'
+   - set_fact:                             
+        var_SEVC40f8_Q5_1:                 '{{item.portNumber}}'
+     loop:                                 '{{list_portInfos}}'
+     when:                                 item.portName =='Q5:1'
+
+
+   - name:                                  get URI for network FC Discover top 
+     oneview_fc_network_facts:             
+        config:                            '{{config}}'
+        name:                              FC Discover top
+   - set_fact:                             
+        var_FC_Discover_top:               '{{fc_networks[0].uri}}'
+
+
+   - name:                                  Create uplink set FC-A for LIG LIG-VC3
+     oneview_logical_interconnect_group:   
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+           name:                           LIG-VC3
+           uplinkSets:                     
+            - name:                        FC-A
+              networkUris:                 
+                 - '{{var_FC_Discover_top}}'                                          
+              logicalPortConfigInfos:      
+                  - desiredSpeed:          Auto
+                    logicalLocation:       
+                       locationEntries:    
+                        - type:            Enclosure
+                          relativeValue:   1
+                        - type:            Bay
+                          relativeValue:   3
+                        - type:            Port
+                          relativeValue:   '{{var_SEVC40f8_Q5_1}}'
+              networkType:                 FibreChannel
+              mode:                        Auto
+
+
+# ---------- Uplink set FC-B for LIG LIG-VC3
+
+
+   - name:                                  get URI for network FC Discover bottom 
+     oneview_fc_network_facts:             
+        config:                            '{{config}}'
+        name:                              FC Discover bottom
+   - set_fact:                             
+        var_FC_Discover_bottom:            '{{fc_networks[0].uri}}'
+
+
+   - name:                                  Create uplink set FC-B for LIG LIG-VC3
+     oneview_logical_interconnect_group:   
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+           name:                           LIG-VC3
+           uplinkSets:                     
+            - name:                        FC-B
+              networkUris:                 
+                 - '{{var_FC_Discover_bottom}}'                                          
+              logicalPortConfigInfos:      
+                  - desiredSpeed:          Auto
+                    logicalLocation:       
+                       locationEntries:    
+                        - type:            Enclosure
+                          relativeValue:   2
+                        - type:            Bay
+                          relativeValue:   6
+                        - type:            Port
+                          relativeValue:   '{{var_SEVC40f8_Q5_1}}'
+              networkType:                 FibreChannel
+              mode:                        Auto
+

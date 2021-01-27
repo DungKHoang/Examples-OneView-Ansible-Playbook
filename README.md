@@ -8,4 +8,9 @@ The repository contains a collection of Ansible playbooks for HPE OneView config
 # Ansible playbooks
    *  Sample-SPT.yml : iLO settings - network connections settings - BIOS settings
    *  Sample-SP.yml  : build server profile from template
-   *  Sample-ethernetNetwork : create Ethernet network
+   *  Sample-ethernetNetwork.yml : create Ethernet network
+   *  Sample-logicalInterconnectGroup.yml : create 3-Frame LIG and 1-Frame LIG of Fibre Channel
+   *  Sample-uplinkset.yml 
+        - query interconnect type to get port name
+        - query URI of network and network sets
+        - create uplink set with uplink ports, nativeNterok and networks
