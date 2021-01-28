@@ -99,20 +99,20 @@
                        args        : {    
                           localAccounts : [                                          
                              {            
-                                   userName                 : user1,                                          
-                                   displayName              : user1-display,                                          
+                                   userName                 : Dung1,                                          
+                                   displayName              : Dung1-display,                                          
                                    password                 : '***REDACTED***',                                          
-                                          
-                                          
-                                          
-
+                                   loginPriv                : True,                                          
+                                   hostBIOSConfigPriv       : True,                                          
+                                   hostNICConfigPriv        : True,                                          
+                                   hostStorageConfigPriv    : True
                              },           
                              {            
-                                   userName                 : user2,                                          
-                                   displayName              : user2-display,                                          
+                                   userName                 : Dung2,                                          
+                                   displayName              : Dung2-display,                                          
                                    password                 : '***REDACTED***',                                          
-                                          
-
+                                   userConfigPriv           : True,                                          
+                                   hostStorageConfigPriv    : True
                              }
                                           ]                                          
                                       }   
@@ -122,23 +122,23 @@
                        args        : {    
                           directoryGroupAccounts :   [                                          
                              {            
-                                   groupDN                  : 'ou=DG1, dc=domain, dc=com' ,                                          
-                                   groupSID                 : 1234567890C ,                                            
-                                          
-                                          
-                                          
-                                          
-
+                                   groupDN                  : 'ou=DG1, dc=domain, dc=com',                                          
+                                   groupSID                 : 1234567890A,                                          
+                                   userConfigPriv           : True,                                          
+                                   remoteConsolePriv        : True,                                          
+                                   virtualMediaPriv         : True,                                          
+                                   iLOConfigPriv            : True,                                          
+                                   virtualPowerAndResetPriv : True
                              },           
                              {            
-                                   groupDN                  : 'ou=DG2, dc=domain, dc=com' ,                                          
-                                   groupSID                 : 1234567890A ,                                            
-
+                                   groupDN                  : 'ou=DG2, dc=domain, dc=com',                                          
+                                   groupSID                 : 1234567890A,                                          
+                                   remoteConsolePriv        : True
                              },           
                              {            
-                                   groupDN                  : 'ou=DG3, dc=domain, dc=com' ,                                          
-                                   groupSID                 : 1234567890B ,                                            
-
+                                   groupDN                  : 'ou=DG3, dc=domain, dc=com',                                          
+                                   groupSID                 : 1234567890A,                                          
+                                   userConfigPriv           : True
                              }
                                                      ]                                          
                                      }    
@@ -148,8 +148,8 @@
                        args        : {    
                           primaryServerAddress:   192.168.1.51 ,                                          
                           primaryServerPort:      9000 ,                                          
-                          groupName:              EKMS2 ,                                          
-                          certificateName:        name_of_CA ,                                          
+                          groupName:              EKMS ,                                          
+                          certificateName:        CA_Name ,                                          
                           loginName:              administrator ,                                          
                           password:               '***REDACTED***'                                          
                                      }    
@@ -173,5 +173,6 @@
            wwnType:                        Virtual
            serialNumberType:               Physical
            iscsiInitiatorNameType:         AutoGenerated
-           hideUnusedFlexNics:             True
+           hideUnusedFlexNics:             False
+
 
