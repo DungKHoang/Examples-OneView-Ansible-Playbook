@@ -1,0 +1,59 @@
+﻿---
+- name:                                    Configure SNMP for LIG
+  hosts:                                   localhost
+  vars:                                    
+     config:                               'oneview_config.json'
+  tasks:                                   
+
+
+
+# ---------- snmp Configuration for LIG LIG-Ethernet
+   - name:                                  Configure snmp for LIG LIG-Ethernet
+     oneview_logical_interconnect_group:   
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+           name:                           LIG-Ethernet
+           readCommunity:                  ligRead
+           systemContact:                  admin@hpe.com
+           v3Enabled:                      True
+           snmpUsers: [                   
+              {                           
+                 snmpV3UserName:           snmpUser-Noauth
+              },                          
+              {                           
+                 snmpV3UserName:           lig-snmpUser,
+                 v3PrivacyProtocol:        des56,
+                 v3AuthProtocol:           SHA,
+                 userCredentials:          
+                  - {                     
+                       propertyName:       v3AuthPassword,
+                       value:              '***REDACTED***'
+                    }                     
+                  - {                     
+                       propertyName:       v3PrivacyPassword,
+                       value:              '***REDACTED***'
+                    }                     
+              }
+                      ]                   
+           trapDestinations: [            
+              {                           
+                 trapDestination:          10.1.1.1,
+                 port:                     162,
+                 trapformat:               SNMPv1,
+                 communityString:          public
+              },                          
+              {                           
+                 trapDestination:          10.1.1.2,
+                 port:                     164,
+                 trapformat:               SNMPv3,
+                 userName:                 user2
+              },                          
+              {                           
+                 trapDestination:          10.1.1.3,
+                 port:                     165,
+                 trapformat:               SNMPv3,
+                 userName:                 user3
+              }
+                             ]            
+          

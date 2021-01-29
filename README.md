@@ -14,3 +14,4 @@ The repository contains a collection of Ansible playbooks for HPE OneView config
         - query interconnect type to get port name
         - query URI of network and network sets
         - create uplink set with uplink ports, nativeNetwork and networks
+    *  Sample-lig-snmp.yml : snmp settings for logical interconnect group
