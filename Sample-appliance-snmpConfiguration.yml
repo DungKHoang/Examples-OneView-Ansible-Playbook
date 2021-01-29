@@ -1,0 +1,105 @@
+﻿---
+- name:                                    Configure SNMP for Appliance
+  hosts:                                   localhost
+  vars:                                    
+     config:                               'oneview_config.json'
+  tasks:                                   
+
+
+
+# ---------- Appliance snmp Configuration
+   - name:                                  appliance read community string
+     oneview_appliance_device_read_community:                                          
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           communityString:                rz31kD
+
+
+# ---------- Appliance snmp V3 User snmp_user
+   - name:                                  Create snmp v3 user snmp_user
+     oneview_appliance_device_snmp_v3_users:                                          
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           type:                           Users
+           userName:                       snmp_user
+           securityLevel:                  Authentication
+           authenticationProtocol:         sha512
+           authenticationPassphrase:       '***REDACTED***'
+
+
+# ---------- Appliance snmp V3 User snmp_userAuthPriv
+   - name:                                  Create snmp v3 user snmp_userAuthPriv
+     oneview_appliance_device_snmp_v3_users:                                          
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           type:                           Users
+           userName:                       snmp_userAuthPriv
+           securityLevel:                  Authentication and privacy
+           authenticationProtocol:         sha512
+           authenticationPassphrase:       '***REDACTED***'
+           privacyProtocol:                AES-256
+           privacyPassphrase:              '***REDACTED***'
+
+
+                                          
+   - name:                                  Create SnmpV1 trap
+     oneview_appliance_device_snmp_v1_trap_destinations:                                          
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           destination:                    '192.168.1.123'
+           communityString:                public
+           port:                           162
+
+
+# ---------- Appliance SnmpV3 traps
+   - name:                                  Get snmpV3 user snmp_user id
+     oneview_appliance_device_snmp_v3_users_facts:                                          
+        config:                            '{{config}}'
+
+        username:                          snmp_user
+   - set_fact:                             
+        var_snmp_user:                     '{{appliance_device_snmp_v3_users[0].id}}'
+
+
+                                          
+   - name:                                  Create SnmpV3 trap
+     oneview_appliance_device_snmp_v3_trap_destinations:                                          
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           destinationAddress:             '192.168.1.67'
+           type:                           Destination
+           userId:                         '{{var_snmp_user}}'
+           port:                           162
+
+
+# ---------- Appliance SnmpV3 traps
+   - name:                                  Get snmpV3 user snmp_userAuthPriv id
+     oneview_appliance_device_snmp_v3_users_facts:                                          
+        config:                            '{{config}}'
+
+        username:                          snmp_userAuthPriv
+   - set_fact:                             
+        var_snmp_userAuthPriv:             '{{appliance_device_snmp_v3_users[0].id}}'
+
+
+                                          
+   - name:                                  Create SnmpV3 trap
+     oneview_appliance_device_snmp_v3_trap_destinations:                                          
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           destinationAddress:             '192.168.3.245'
+           type:                           Destination
+           userId:                         '{{var_snmp_userAuthPriv}}'
+           port:                           162
