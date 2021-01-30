@@ -1,0 +1,80 @@
+﻿---
+- name:                                    Configure IP v4 address pools
+  hosts:                                   localhost
+  vars:                                    
+     config:                               'oneview_config.json'
+  tasks:                                   
+
+
+
+# ---------- IP v4 address pool Image Streamer on subnet 10.10.4.0
+   - name:                                 Ensure the ID Pools IPV4 Subnet exists
+     oneview_id_pools_ipv4_subnet:         
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           name:                           subnet_10.10.4.0
+           networkId:                      10.10.4.0
+           subnetmask:                     255.255.252.0
+           gateway:                        10.10.4.1
+           domain:                         acme.com
+           dnsServers:                     
+               - 192.168.1.1              
+               - 16.31.84.24              
+   - set_fact:                             
+        subnet_ImageStreamer_uri:          "{{id_pools_ipv4_subnet['uri'] }}" 
+
+
+                                          
+   - name:                                 Ensure the IPV4 Range Image Streamer exists
+     oneview_id_pools_ipv4_range:          
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           name:                           Image Streamer
+           subnetUri:                      '{{subnet_ImageStreamer_uri}}'
+           type:                           Range
+           rangeCategory:                  Custom
+           startStopFragments:             
+            - {                           
+                 startAddress:             10.10.4.2 ,
+                 endAddress:               10.10.4.100 ,
+                 fragmentType:             FREE
+              }                           
+
+
+# ---------- IP v4 address pool Deployment on subnet 192.168.88.0
+   - name:                                 Ensure the ID Pools IPV4 Subnet exists
+     oneview_id_pools_ipv4_subnet:         
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           name:                           subnet_192.168.88.0
+           networkId:                      192.168.88.0
+           subnetmask:                     255.255.255.0
+           gateway:                        192.168.88.1
+           domain:                         acme2.com
+   - set_fact:                             
+        subnet_Deployment_uri:             "{{id_pools_ipv4_subnet['uri'] }}" 
+
+
+                                          
+   - name:                                 Ensure the IPV4 Range Deployment exists
+     oneview_id_pools_ipv4_range:          
+        config:                            '{{config}}'
+        state:                             present
+        data:                              
+
+           name:                           Deployment
+           subnetUri:                      '{{subnet_Deployment_uri}}'
+           type:                           Range
+           rangeCategory:                  Custom
+           startStopFragments:             
+            - {                           
+                 startAddress:             192.168.88.50 ,
+                 endAddress:               192.168.88.200 ,
+                 fragmentType:             FREE
+              }                           

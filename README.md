@@ -19,3 +19,4 @@ The repository contains a collection of Ansible playbooks for HPE OneView config
         - community String
         - snmpV3 users
         - snmpV1 trap and snmpV3 trap
+   *  Sample-addressPool-ipv4.yml: ipV4 address pool range and subnet
