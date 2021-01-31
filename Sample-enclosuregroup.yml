@@ -80,9 +80,9 @@
         lig:                                       '{{sas_logical_interconnect_groups}}' 
      when:                                         (lig|length == 0)
    - set_fact:                                     
-        var_LIG_FC_uri:                     '{{lig[0].uri}}' 
-        var_LIG_FC_bay_primary:             '{{lig[0].interconnectBaySet}}' 
-        var_LIG_FC_bay_secondary:           '{{lig[0].interconnectBaySet + IC_OFFSET}}' 
+        var_LIG_FC_uri:                            '{{lig[0].uri}}' 
+        var_LIG_FC_bay_primary:                    '{{lig[0].interconnectBaySet}}' 
+        var_LIG_FC_bay_secondary:                  '{{lig[0].interconnectBaySet + IC_OFFSET}}' 
 
 
                                                   
