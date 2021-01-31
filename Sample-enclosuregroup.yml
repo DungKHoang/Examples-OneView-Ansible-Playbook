@@ -1,0 +1,180 @@
+﻿---
+- name:                                            Configure Enclosure Group
+  hosts:                                           localhost
+  vars:                                            
+     config:                                       'oneview_config.json'
+  tasks:                                           
+
+   - set_fact:                                     
+        IC_OFFSET:                                 3
+# ---------- Enclosure Group PYTHON6666-user-EG
+
+
+                                                  
+   - name:                                          Get lig LIG-SAS Information
+     oneview_logical_interconnect_group_facts:     
+        config:                                    '{{config}}'
+
+        name:                                      LIG-SAS
+   - set_fact:                                     
+        lig:                                       '{{logical_interconnect_groups}}' 
+
+
+                                                  
+   - name:                                          Try SAS lig LIG-SAS Information
+     oneview_sas_logical_interconnect_group_facts: 
+        config:                                    '{{config}}'
+
+        name:                                      LIG-SAS
+   - set_fact:                                     
+        lig:                                       '{{sas_logical_interconnect_groups}}' 
+     when:                                         (lig|length == 0)
+   - set_fact:                                     
+        var_LIG_SAS_uri:                           '{{lig[0].uri}}' 
+        var_LIG_SAS_bay_primary:                   '{{lig[0].interconnectBaySet}}' 
+        var_LIG_SAS_bay_secondary:                 '{{lig[0].interconnectBaySet + IC_OFFSET}}' 
+
+
+                                                  
+   - name:                                          Get lig LIG-VC3 Information
+     oneview_logical_interconnect_group_facts:     
+        config:                                    '{{config}}'
+
+        name:                                      LIG-VC3
+   - set_fact:                                     
+        lig:                                       '{{logical_interconnect_groups}}' 
+
+
+                                                  
+   - name:                                          Try SAS lig LIG-VC3 Information
+     oneview_sas_logical_interconnect_group_facts: 
+        config:                                    '{{config}}'
+
+        name:                                      LIG-VC3
+   - set_fact:                                     
+        lig:                                       '{{sas_logical_interconnect_groups}}' 
+     when:                                         (lig|length == 0)
+   - set_fact:                                     
+        var_LIG_VC3_uri:                           '{{lig[0].uri}}' 
+        var_LIG_VC3_bay_primary:                   '{{lig[0].interconnectBaySet}}' 
+        var_LIG_VC3_bay_secondary:                 '{{lig[0].interconnectBaySet + IC_OFFSET}}' 
+
+
+                                                  
+   - name:                                          Get lig OBT-LIG-FC2-5 Information
+     oneview_logical_interconnect_group_facts:     
+        config:                                    '{{config}}'
+
+        name:                                      OBT-LIG-FC2-5
+   - set_fact:                                     
+        lig:                                       '{{logical_interconnect_groups}}' 
+
+
+                                                  
+   - name:                                          Try SAS lig OBT-LIG-FC2-5 Information
+     oneview_sas_logical_interconnect_group_facts: 
+        config:                                    '{{config}}'
+
+        name:                                      OBT-LIG-FC2-5
+   - set_fact:                                     
+        lig:                                       '{{sas_logical_interconnect_groups}}' 
+     when:                                         (lig|length == 0)
+   - set_fact:                                     
+        var_OBT_LIG_FC2_5_uri:                     '{{lig[0].uri}}' 
+        var_OBT_LIG_FC2_5_bay_primary:             '{{lig[0].interconnectBaySet}}' 
+        var_OBT_LIG_FC2_5_bay_secondary:           '{{lig[0].interconnectBaySet + IC_OFFSET}}' 
+
+
+                                                  
+   - name:                                          Get subnet URI for subnet Deployment
+     oneview_id_pools_ipv4_range_facts:            
+        config:                                    '{{config}}'
+
+        name:                                      Deployment
+   - set_fact:                                     
+        var_Deployment_subnet_uri:                 '{{id_pools_ipv4_ranges[0].uri}}'
+
+
+                                                  
+   - name:                                          Get subnet URI for subnet Management
+     oneview_id_pools_ipv4_range_facts:            
+        config:                                    '{{config}}'
+
+        name:                                      Management
+   - set_fact:                                     
+        var_Management_subnet_uri:                 '{{id_pools_ipv4_ranges[0].uri}}'
+
+
+                                                  
+   - name:                                          Create Enclosure group
+     oneview_enclosure_group:                      
+        config:                                    '{{config}}'
+        state:                                     present
+        data:                                      
+
+           name:                                   PYTHON6666-user-EG
+           enclosureCount:                         3
+           powerMode:                              RedundantPowerFeed
+           ipv6AddressingMode:                     External
+           interconnectBayMappings:                
+
+
+            - interconnectBay:                     '{{var_LIG_VC3_bay_primary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_VC3_uri}}'
+              enclosureIndex:                      1
+            - interconnectBay:                     '{{var_LIG_VC3_bay_secondary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_VC3_uri}}'
+              enclosureIndex:                      1
+
+
+            - interconnectBay:                     '{{var_LIG_SAS_bay_primary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_SAS_uri}}'
+              enclosureIndex:                      1
+            - interconnectBay:                     '{{var_LIG_SAS_bay_secondary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_SAS_uri}}'
+              enclosureIndex:                      1
+
+
+            - interconnectBay:                     '{{var_OBT_LIG_FC2_5_bay_primary}}'
+              logicalInterconnectGroupUri:         '{{var_OBT_LIG_FC2_5_uri}}'
+              enclosureIndex:                      1
+            - interconnectBay:                     '{{var_OBT_LIG_FC2_5_bay_secondary}}'
+              logicalInterconnectGroupUri:         '{{var_OBT_LIG_FC2_5_uri}}'
+              enclosureIndex:                      1
+
+
+            - interconnectBay:                     '{{var_LIG_VC3_bay_primary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_VC3_uri}}'
+              enclosureIndex:                      2
+            - interconnectBay:                     '{{var_LIG_VC3_bay_secondary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_VC3_uri}}'
+              enclosureIndex:                      2
+
+
+            - interconnectBay:                     '{{var_LIG_SAS_bay_primary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_SAS_uri}}'
+              enclosureIndex:                      2
+            - interconnectBay:                     '{{var_LIG_SAS_bay_secondary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_SAS_uri}}'
+              enclosureIndex:                      2
+
+
+            - interconnectBay:                     '{{var_LIG_VC3_bay_primary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_VC3_uri}}'
+              enclosureIndex:                      3
+            - interconnectBay:                     '{{var_LIG_VC3_bay_secondary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_VC3_uri}}'
+              enclosureIndex:                      3
+
+
+            - interconnectBay:                     '{{var_OBT_LIG_FC2_5_bay_primary}}'
+              logicalInterconnectGroupUri:         '{{var_OBT_LIG_FC2_5_uri}}'
+              enclosureIndex:                      3
+            - interconnectBay:                     '{{var_OBT_LIG_FC2_5_bay_secondary}}'
+              logicalInterconnectGroupUri:         '{{var_OBT_LIG_FC2_5_uri}}'
+              enclosureIndex:                      3
+           ipAddressingMode:                       IpPool
+           ipRangeUris:                            
+               - '{{var_Deployment_subnet_uri}}'  
+               - '{{var_Management_subnet_uri}}'  
+
