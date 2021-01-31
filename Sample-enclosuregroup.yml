@@ -7,7 +7,7 @@
 
    - set_fact:                                     
         IC_OFFSET:                                 3
-# ---------- Enclosure Group PYTHON6666-user-EG
+# ---------- Enclosure Group EG-3Frames
 
 
                                                   
@@ -112,7 +112,7 @@
         state:                                     present
         data:                                      
 
-           name:                                   PYTHON6666-user-EG
+           name:                                   EG-3Frames
            enclosureCount:                         3
            powerMode:                              RedundantPowerFeed
            ipv6AddressingMode:                     External
