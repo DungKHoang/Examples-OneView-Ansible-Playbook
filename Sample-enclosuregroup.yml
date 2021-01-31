@@ -80,9 +80,9 @@
         lig:                                       '{{sas_logical_interconnect_groups}}' 
      when:                                         (lig|length == 0)
    - set_fact:                                     
-        var_OBT_LIG_FC2_5_uri:                     '{{lig[0].uri}}' 
-        var_OBT_LIG_FC2_5_bay_primary:             '{{lig[0].interconnectBaySet}}' 
-        var_OBT_LIG_FC2_5_bay_secondary:           '{{lig[0].interconnectBaySet + IC_OFFSET}}' 
+        var_LIG_FC_uri:                     '{{lig[0].uri}}' 
+        var_LIG_FC_bay_primary:             '{{lig[0].interconnectBaySet}}' 
+        var_LIG_FC_bay_secondary:           '{{lig[0].interconnectBaySet + IC_OFFSET}}' 
 
 
                                                   
@@ -135,11 +135,11 @@
               enclosureIndex:                      1
 
 
-            - interconnectBay:                     '{{var_OBT_LIG_FC2_5_bay_primary}}'
-              logicalInterconnectGroupUri:         '{{var_OBT_LIG_FC2_5_uri}}'
+            - interconnectBay:                     '{{var_LIG_FC_bay_primary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_FC_uri}}'
               enclosureIndex:                      1
-            - interconnectBay:                     '{{var_OBT_LIG_FC2_5_bay_secondary}}'
-              logicalInterconnectGroupUri:         '{{var_OBT_LIG_FC2_5_uri}}'
+            - interconnectBay:                     '{{var_LIG_FC_bay_secondary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_FC_uri}}'
               enclosureIndex:                      1
 
 
@@ -167,11 +167,11 @@
               enclosureIndex:                      3
 
 
-            - interconnectBay:                     '{{var_OBT_LIG_FC2_5_bay_primary}}'
-              logicalInterconnectGroupUri:         '{{var_OBT_LIG_FC2_5_uri}}'
+            - interconnectBay:                     '{{var_LIG_FC_bay_primary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_FC_uri}}'
               enclosureIndex:                      3
-            - interconnectBay:                     '{{var_OBT_LIG_FC2_5_bay_secondary}}'
-              logicalInterconnectGroupUri:         '{{var_OBT_LIG_FC2_5_uri}}'
+            - interconnectBay:                     '{{var_LIG_FC_bay_secondary}}'
+              logicalInterconnectGroupUri:         '{{var_LIG_FC_uri}}'
               enclosureIndex:                      3
            ipAddressingMode:                       IpPool
            ipRangeUris:                            
