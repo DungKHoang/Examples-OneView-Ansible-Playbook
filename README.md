@@ -21,3 +21,4 @@ The repository contains a collection of Ansible playbooks for HPE OneView config
         - snmpV1 trap and snmpV3 trap
    *  Sample-addressPool-ipv4.yml: ipV4 address pool range and subnet
    *  Sample-enclosuregroup.yml : Enclosure group
+   *  Sample-logicalenclosure.yml : Enclosure group with EBIPA seetings , .ie. manual configuration of IP addresses fro Bay and Interconnect
